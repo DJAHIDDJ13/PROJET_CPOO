@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<session version="1.0">
-<refactoring accessors="true" comment="Delete element from project &apos;ROGUE_LIKE&apos;&#x0A;- Original project: &apos;ROGUE_LIKE&apos;&#x0A;- Original element: &apos;ROGUE_LIKE/src/fr.rogue.rogue_like_projet&apos;" description="Delete element" element1="/src&lt;fr.rogue.rogue_like_projet" element2="/src&lt;fr.rogue" element3="/src&lt;fr" elements="3" flags="589830" id="org.eclipse.jdt.ui.delete" resources="0" stamp="1519474822629" subPackages="false" version="1.0"/>
-</session>
