@@ -1,5 +1,6 @@
 package rogue;
 
+
 public class WorldBuilder {
     private int width;
     private int height;
@@ -14,11 +15,24 @@ public class WorldBuilder {
     public World build() {
         return new World(tiles);
     }
-    private WorldBuilder randomizeTiles() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = Math.random() < 0.5 ? Tile.FLOOR : Tile.WALL;
-            }
+    private WorldBuilder create_rooms(int nbrRooms) {
+    	int nbr = 0;
+    	for(int i=0; i<width; i++) {
+    		for(int j=0; j<height; j++) {
+    			tiles[i][j] = Tile.WALL;
+    		}
+    	}
+        while(nbr < nbrRooms) {
+        	int x = (int) (Math.random() * (width-15));
+        	int y = (int) (Math.random() * (height-15));
+        	int w = (int) (Math.random() * 5) + 10;
+        	int h = (int) (Math.random() * 5) + 10;
+        	for(int i=x; i<x+w; i++) {
+        		for(int j=y; j<y+h; j++) {
+        			tiles[i][j] = Tile.FLOOR;
+        		}
+        	}
+        	nbr++;
         }
         return this;
     }
@@ -51,6 +65,6 @@ public class WorldBuilder {
         return this;
     }
     public WorldBuilder makeCaves() {
-        return randomizeTiles().smooth(8);
+        return create_rooms(100);
     }
 }

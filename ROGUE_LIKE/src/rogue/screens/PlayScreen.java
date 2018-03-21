@@ -1,6 +1,5 @@
 package rogue.screens;
 
-
 import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 import rogue.*;
@@ -17,9 +16,7 @@ public class PlayScreen implements Screen {
         createWorld();
     }
     private void createWorld(){
-        world = new WorldBuilder(90, 31)
-              .makeCaves()
-              .build();
+        world = new WorldBuilder(200, 200).makeCaves().build();
     }
     private void displayTiles(AsciiPanel terminal, int left, int top) {
         for (int x = 0; x < screenWidth; x++){
