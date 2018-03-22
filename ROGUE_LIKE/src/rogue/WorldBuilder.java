@@ -1,5 +1,6 @@
 package rogue;
 
+import java.awt.Rectangle;
 
 public class WorldBuilder {
     private int width;
@@ -22,16 +23,29 @@ public class WorldBuilder {
     			tiles[i][j] = Tile.WALL;
     		}
     	}
+    	Rectangle[] rooms = new Rectangle[nbrRooms];
         while(nbr < nbrRooms) {
         	int x = (int) (Math.random() * (width-15));
         	int y = (int) (Math.random() * (height-15));
         	int w = (int) (Math.random() * 5) + 10;
         	int h = (int) (Math.random() * 5) + 10;
+        	Rectangle r = new Rectangle(x,y,x+w,y+w);
+        	boolean stop = false;
+        	for(Rectangle rect:rooms) {
+        		if(r.intersects(rect)) {
+        			stop = true;
+        			break;
+        		}
+        	}
+        	if(stop) {
+        		continue;
+        	}
         	for(int i=x; i<x+w; i++) {
         		for(int j=y; j<y+h; j++) {
         			tiles[i][j] = Tile.FLOOR;
         		}
         	}
+        	rooms[nbr] = new Rectangle(x,y,x+w,y+w);
         	nbr++;
         }
         return this;
