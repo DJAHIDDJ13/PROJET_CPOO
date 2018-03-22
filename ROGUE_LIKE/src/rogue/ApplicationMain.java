@@ -1,9 +1,7 @@
 package rogue;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import javax.swing.JFrame;
-
 import asciiPanel.AsciiPanel;
 import rogue.screens.*;
 
@@ -24,7 +22,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
         repaint();
     }
 
-    public void repaint(){
+    public void repaint() {
         terminal.clear();
         screen.displayOutput(terminal);
         super.repaint();
@@ -32,6 +30,11 @@ public class ApplicationMain extends JFrame implements KeyListener {
 
     public void keyPressed(KeyEvent e) {
         screen = screen.respondToUserInput(e);
+        if(screen == null) {
+        	setVisible(false);
+        	dispose();
+        	System.exit(0);
+        }
         repaint();
     }
 
@@ -40,7 +43,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
     public void keyTyped(KeyEvent e) { }
 
     public static void main(String[] args) {
-        ApplicationMain app = new ApplicationMain();
+    	ApplicationMain app = new ApplicationMain();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);
     }

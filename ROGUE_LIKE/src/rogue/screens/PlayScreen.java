@@ -9,14 +9,17 @@ public class PlayScreen implements Screen {
     private int centerY;
     private int screenWidth;
     private int screenHeight;
-
+    private SavedGame savedGame;
     public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
     }
     private void createWorld(){
-        world = new WorldBuilder(200, 200).makeCaves().build();
+    	int width = 200;
+    	int height = 200;
+        world = new WorldBuilder(width, height).makeCaves().build();
+        savedGame = new SavedGame(world, 0, 0, width, height);
     }
     private void displayTiles(AsciiPanel terminal, int left, int top) {
         for (int x = 0; x < screenWidth; x++){
@@ -48,6 +51,7 @@ public class PlayScreen implements Screen {
         centerY = Math.max(0, Math.min(centerY + my, world.height() - 1));
     }
     public Screen respondToUserInput(KeyEvent key) {
+    	savedGame.update(centerX, centerY);
         switch (key.getKeyCode()){
 	        case KeyEvent.VK_LEFT:
 	        case KeyEvent.VK_H: scrollBy(-1, 0); break;
@@ -61,7 +65,7 @@ public class PlayScreen implements Screen {
 	        case KeyEvent.VK_U: scrollBy( 1,-1); break;
 	        case KeyEvent.VK_B: scrollBy(-1, 1); break;
 	        case KeyEvent.VK_N: scrollBy( 1, 1); break;
-	        case KeyEvent.VK_ESCAPE: return new LoseScreen();
+	        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
 	        case KeyEvent.VK_ENTER: return new WinScreen();
         }
     

@@ -3,7 +3,7 @@ import java.awt.Color;
 import asciiPanel.AsciiPanel;
 
 public enum Tile {
-    FLOOR((char)250, AsciiPanel.yellow),
+    FLOOR('.', AsciiPanel.yellow),
     WALL('@', AsciiPanel.green),
     BOUNDS('x', AsciiPanel.brightBlack);
 
