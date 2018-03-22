@@ -61,6 +61,8 @@ public class PlayScreen implements Screen {
 	        case KeyEvent.VK_U: scrollBy( 1,-1); break;
 	        case KeyEvent.VK_B: scrollBy(-1, 1); break;
 	        case KeyEvent.VK_N: scrollBy( 1, 1); break;
+	        case KeyEvent.VK_ESCAPE: return new LoseScreen();
+	        case KeyEvent.VK_ENTER: return new WinScreen();
         }
     
         return this;
