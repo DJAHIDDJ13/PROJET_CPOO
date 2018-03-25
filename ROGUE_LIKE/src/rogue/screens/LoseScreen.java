@@ -6,6 +6,7 @@ import asciiPanel.AsciiPanel;
 public class LoseScreen implements Screen {
 
     public void displayOutput(AsciiPanel terminal) {
+    	//TODO lost game info
         terminal.write("You lost.", 1, 1);
         terminal.writeCenter("-- press [enter] to restart --", 22);
     }
