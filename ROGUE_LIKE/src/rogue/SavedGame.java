@@ -1,10 +1,14 @@
 package rogue;
 
-import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class SavedGame {
 	World world;
@@ -33,10 +37,7 @@ public class SavedGame {
 		writer.print(centerX+" "+centerY+"\n");
 		for(int i=0; i<width; i++) {
 			for(int j=0; j<height; j++) {
-				Color c = world.color(i, j);
-				int R = c.getRed(), G = c.getGreen(), B = c.getBlue();
-				writer.print(world.glyph(i, j)+String.format("%02x%02x%02x ", R, G, B));
-				
+				writer.print(world.glyph(i, j)+" ");
 			}
 			writer.print("\n");
 		}
@@ -46,4 +47,46 @@ public class SavedGame {
 		this.centerX = centerX;
 		this.centerY = centerY;
 	}
+
+	public SavedGame loadGame(String path) throws FileNotFoundException {
+		Tile[][] tiles = null;
+		File file = new File(path);
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		int width = 0, height = 0, cX = 0, cY = 0;
+		String line;
+		Pattern p = Pattern.compile("(\\d+) (\\d+)");
+		Pattern p2 = Pattern.compile("(. )+");
+		try {
+			if((line = br.readLine())!=null) {
+				Matcher m = p.matcher(line);
+				width = Integer.parseInt(m.group(1));
+				height = Integer.parseInt(m.group(2));
+			}
+			tiles = new Tile[width][height];
+			if((line = br.readLine())!=null) {
+				Matcher m = p.matcher(line);
+				cX = Integer.parseInt(m.group(1));
+				cY = Integer.parseInt(m.group(2));
+			}
+			for(int i=0; i<height; i++) {
+				if((line = br.readLine())!=null) {
+					Matcher m = p2.matcher(line);
+					for(int j=0; j<width; j++) {
+						String tmp = m.group(j);
+						char glyph = tmp.charAt(0);
+						switch(glyph) {
+						case '.': tiles[i][j] = Tile.FLOOR;
+						case '@': tiles[i][j] = Tile.WALL;
+						default:  tiles[i][j] = Tile.BOUNDS;
+						}
+					}
+				}
+			}
+			br.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return new SavedGame(new World(tiles), cX,cY, width, height);
+	}
 }
+
