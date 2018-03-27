@@ -54,26 +54,26 @@ public class SavedGame {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		int width = 0, height = 0, cX = 0, cY = 0;
 		String line;
-		Pattern p = Pattern.compile("(\\d+) (\\d+)");
-		Pattern p2 = Pattern.compile("(. )+");
 		try {
 			if((line = br.readLine())!=null) {
-				Matcher m = p.matcher(line);
-				width = Integer.parseInt(m.group(1));
-				height = Integer.parseInt(m.group(2));
+				String[] s = line.split(" ");
+				System.out.println(s[0] + " "+ s[1]);
+				width = Integer.parseInt(s[0]);
+				height = Integer.parseInt(s[1]);
 			}
 			tiles = new Tile[width][height];
 			if((line = br.readLine())!=null) {
-				Matcher m = p.matcher(line);
-				cX = Integer.parseInt(m.group(1));
-				cY = Integer.parseInt(m.group(2));
+				String[] s = line.split(" ");
+				System.out.println(s[0] + " "+ s[1]);
+				cX = Integer.parseInt(s[0]);
+				cY = Integer.parseInt(s[1]);
 			}
 			for(int i=0; i<height; i++) {
 				if((line = br.readLine())!=null) {
-					Matcher m = p2.matcher(line);
+					String[] s = line.split(" ");
 					for(int j=0; j<width; j++) {
-						String tmp = m.group(j);
-						char glyph = tmp.charAt(0);
+						System.out.println(s[j]);
+						char glyph = s[j].charAt(0);
 						switch(glyph) {
 						case '.': tiles[i][j] = Tile.FLOOR;
 						case '@': tiles[i][j] = Tile.WALL;

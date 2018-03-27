@@ -1,6 +1,8 @@
 package rogue;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.FileNotFoundException;
+
 import javax.swing.JFrame;
 import asciiPanel.AsciiPanel;
 import rogue.screens.*;
@@ -46,5 +48,13 @@ public class ApplicationMain extends JFrame implements KeyListener {
     	ApplicationMain app = new ApplicationMain();
         app.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         app.setVisible(true);
+        SavedGame s = new SavedGame(null ,0, 0, 0, 0);
+        try {
+			s = s.loadGame("/home/user/.savedRlGames/dja");
+			System.out.println(s.width + " " + s.height);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 }
