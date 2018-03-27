@@ -1,5 +1,7 @@
 package rogue;
 
+import java.awt.Rectangle;
+
 public class WorldBuilder {
 	private int width;
 	private int height;
@@ -14,7 +16,41 @@ public class WorldBuilder {
 	public World build() {
 		return new World(tiles);
 	}
-
+	private WorldBuilder makeRooms() {
+		int maxWidth = 15;
+		int minWidth = 5;
+		int rectangularity = 4;
+		int nbrRooms = 75;
+		int nbr = 0;
+		Rectangle[] rooms = new Rectangle[nbrRooms];
+		for(int i=0; i<width; i++) {
+			for(int j=0; j<height; j++) {
+				tiles[i][j] = Tile.WALL;
+			}
+		}
+		while_1:do {
+			Rectangle n;
+			int x = (int) (Math.random()*(width - maxWidth));
+			int y = (int) (Math.random()*(height - maxWidth));
+			int w = (int) (Math.random()*(maxWidth-minWidth))+minWidth;
+			int h = w > maxWidth-rectangularity?w-(int)(Math.random()*rectangularity):w+(int)(Math.random()*rectangularity);
+			n = new Rectangle(x, y, w, h);
+			for(int i=0; i<nbr; i++) {
+				if(n.intersects(rooms[i]))
+					continue while_1;
+			}
+			rooms[nbr] = n;
+			nbr++;
+		} while(nbr<nbrRooms);
+		for(int i=0; i<nbrRooms; i++) {
+			for(int j=(int) rooms[i].getX(); j<rooms[i].getX()+rooms[i].getWidth(); j++) {
+				for(int k=(int) rooms[i].getY(); k<rooms[i].getY()+rooms[i].getHeight(); k++) {
+					tiles[j][k] = Tile.FLOOR;
+				}
+			}
+		}
+		return this;
+	}
 	private WorldBuilder randomizeTiles() {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
@@ -54,6 +90,6 @@ public class WorldBuilder {
 	}
 
 	public WorldBuilder makeCaves() {
-		return randomizeTiles().smooth(8);
+		return makeRooms();
 	}
 }
