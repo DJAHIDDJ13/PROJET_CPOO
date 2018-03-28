@@ -1,6 +1,8 @@
 package rogue.screens;
 
 import java.awt.event.KeyEvent;
+import java.io.FileNotFoundException;
+
 import asciiPanel.AsciiPanel;
 import rogue.*;
 public class PlayScreen implements Screen {
@@ -14,6 +16,19 @@ public class PlayScreen implements Screen {
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
+    }
+    public PlayScreen(String path) {
+    	SavedGame s = new SavedGame(null, 0, 0, 0, 0);
+    	try {
+			s = s.loadGame(path);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+    	this.world = s.world;
+    	this.centerX = s.centerX;
+    	this.centerY = s.centerX;
+    	this.screenWidth = s.width;
+    	this.screenHeight = s.height;
     }
     private void createWorld(){
     	int width = 200;

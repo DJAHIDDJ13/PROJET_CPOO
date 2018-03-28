@@ -16,21 +16,29 @@ public class StartScreen implements Screen {
     	} else {
     		terminal.writeCenter("HELP", 5, new Color(255,255,255));
     	}
-    	
+    	if(selected == 2) {
+    		terminal.writeCenter("LOAD", 8, new Color(255, 255, 0));
+    	} else {
+    		terminal.writeCenter("LOAD", 8, new Color(255,255,255));
+    	}
         terminal.writeCenter("-- press [enter] to start --", 22);
     }
 
     public Screen respondToUserInput(KeyEvent key) {
     	switch(key.getKeyCode()) {
     	case KeyEvent.VK_DOWN:
+    		selected = selected==2?2:selected+1;
+    		return this;    		
     	case KeyEvent.VK_UP:
-    		selected = 1 - selected;
+    		selected = selected==0?0:selected-1;
     		return this;
     	case KeyEvent.VK_ENTER:
     		if(selected == 0) {
     			return new PlayScreen();
-    		} else {
+    		} else if(selected == 1) {
     			return new HelpScreen();
+    		} else if(selected == 2) {
+    			return new LoadScreen();
     		}
     	default:
     		return this;

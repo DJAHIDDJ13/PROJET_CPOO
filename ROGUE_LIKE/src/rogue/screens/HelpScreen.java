@@ -7,8 +7,9 @@ import rogue.screens.StartScreen;
 public class HelpScreen implements Screen{
 
 	public void displayOutput(AsciiPanel terminal) {
-		//TODO write help info
-		terminal.writeCenter("NOTHING", 2);
+		terminal.writeCenter("HELP:", 2);
+		terminal.writeCenter("press arrows or H, L, K, J to move", 5);
+		terminal.writeCenter("press ESCAPE to safeguard game", 7);		
 		terminal.writeCenter("-- press [escape] to return to start", 22);
 	}
 

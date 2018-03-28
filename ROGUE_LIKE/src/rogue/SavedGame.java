@@ -10,11 +10,11 @@ import java.io.UnsupportedEncodingException;
 
 
 public class SavedGame {
-	World world;
-	int centerX;
-	int centerY;
-	int width;
-	int height;
+	public World world;
+	public int centerX;
+	public int centerY;
+	public int width;
+	public int height;
 	public SavedGame(World world, int centerX, int centerY, int width, int height) {
 		this.world = world;
 		this.centerX = centerX;
@@ -56,14 +56,12 @@ public class SavedGame {
 		try {
 			if((line = br.readLine())!=null) {
 				String[] s = line.split(" ");
-				System.out.println(s[0] + " "+ s[1]);
 				width = Integer.parseInt(s[0]);
 				height = Integer.parseInt(s[1]);
 			}
 			tiles = new Tile[width][height];
 			if((line = br.readLine())!=null) {
 				String[] s = line.split(" ");
-				System.out.println(s[0] + " "+ s[1]);
 				cX = Integer.parseInt(s[0]);
 				cY = Integer.parseInt(s[1]);
 			}
@@ -71,7 +69,6 @@ public class SavedGame {
 				if((line = br.readLine())!=null) {
 					String[] s = line.split(" ");
 					for(int j=0; j<width; j++) {
-						System.out.println(s[j]);
 						char glyph = s[j].charAt(0);
 						switch(glyph) {
 						case '.': tiles[i][j] = Tile.FLOOR;
