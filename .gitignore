@@ -1,2 +1,1 @@
-*.class .metadata *.log /.metadata/ ./ROGUE_LIKE/bin/
-/.metadata/
+*.class .metadata *.log 
