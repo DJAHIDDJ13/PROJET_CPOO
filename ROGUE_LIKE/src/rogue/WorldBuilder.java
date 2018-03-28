@@ -17,10 +17,10 @@ public class WorldBuilder {
 		return new World(tiles);
 	}
 	private WorldBuilder makeRooms() {
-		int maxWidth = 15;
+		int maxWidth = 10;
 		int minWidth = 5;
-		int rectangularity = 4;
-		int nbrRooms = 75;
+		double rectangularity = 0.3;
+		int nbrRooms = 500;
 		int nbr = 0;
 		Rectangle[] rooms = new Rectangle[nbrRooms];
 		for(int i=0; i<width; i++) {
@@ -33,7 +33,8 @@ public class WorldBuilder {
 			int x = (int) (Math.random()*(width - maxWidth));
 			int y = (int) (Math.random()*(height - maxWidth));
 			int w = (int) (Math.random()*(maxWidth-minWidth))+minWidth;
-			int h = w > maxWidth-rectangularity?w-(int)(Math.random()*rectangularity):w+(int)(Math.random()*rectangularity);
+			int h = (int) (w*(Math.random()*2*rectangularity)+1-rectangularity);
+			h = h<minWidth?minWidth:h;
 			n = new Rectangle(x, y, w, h);
 			for(int i=0; i<nbr; i++) {
 				if(n.intersects(rooms[i]))
