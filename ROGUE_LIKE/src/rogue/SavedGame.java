@@ -24,7 +24,7 @@ public class SavedGame {
 	}
 	public void SaveGame(String name) throws FileNotFoundException, UnsupportedEncodingException{
 		String path = System.getProperty("user.home") + File.separator + ".savedRlGames" + File.separator + name;
-		System.out.println(path);
+		System.out.println("saved to: " + path);
 		File f = new File(path);
 		if(!f.getParentFile().isDirectory())
 			f.getParentFile().mkdirs();
@@ -71,8 +71,8 @@ public class SavedGame {
 					for(int j=0; j<width; j++) {
 						char glyph = s[j].charAt(0);
 						switch(glyph) {
-						case '.': tiles[i][j] = Tile.FLOOR;
-						case '@': tiles[i][j] = Tile.WALL;
+						case '.': tiles[i][j] = Tile.FLOOR; break;
+						case '@': tiles[i][j] = Tile.WALL; break;
 						default:  tiles[i][j] = Tile.BOUNDS;
 						}
 					}

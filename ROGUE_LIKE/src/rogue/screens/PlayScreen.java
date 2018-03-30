@@ -29,6 +29,7 @@ public class PlayScreen implements Screen {
     	this.centerY = s.centerX;
         screenWidth = 80;
         screenHeight = 21;
+        savedGame = new SavedGame(s.world, 0, 0,s.world.width() , s.world.height());
     }
     private void createWorld(){
     	int width = 200;
@@ -41,7 +42,7 @@ public class PlayScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-
+                
                 terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
             }
         }
