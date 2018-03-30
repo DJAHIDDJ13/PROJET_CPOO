@@ -27,18 +27,16 @@ public class StartScreen implements Screen {
     public Screen respondToUserInput(KeyEvent key) {
     	switch(key.getKeyCode()) {
     	case KeyEvent.VK_DOWN:
-    		selected = selected==2?2:selected+1;
+    		selected = Math.floorMod(selected+1, 3);
     		return this;    		
     	case KeyEvent.VK_UP:
-    		selected = selected==0?0:selected-1;
+    		selected = Math.floorMod(selected-1, 3);
     		return this;
     	case KeyEvent.VK_ENTER:
-    		if(selected == 0) {
-    			return new PlayScreen();
-    		} else if(selected == 1) {
-    			return new HelpScreen();
-    		} else if(selected == 2) {
-    			return new LoadScreen();
+    		switch(selected) {
+    		case 0: return new PlayScreen();
+    		case 1: return new HelpScreen();
+    		case 2: return new LoadScreen();
     		}
     	default:
     		return this;

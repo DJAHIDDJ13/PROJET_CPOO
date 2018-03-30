@@ -27,8 +27,8 @@ public class PlayScreen implements Screen {
     	this.world = s.world;
     	this.centerX = s.centerX;
     	this.centerY = s.centerX;
-    	this.screenWidth = s.width;
-    	this.screenHeight = s.height;
+        screenWidth = 80;
+        screenHeight = 21;
     }
     private void createWorld(){
     	int width = 200;
