@@ -14,7 +14,9 @@ public class SavedGame {
 	public int centerX;
 	public int centerY;
 	public int width;
+	public int getWidth() { return width; }
 	public int height;
+	public int getHeight() { return height; }
 	public SavedGame(World world, int centerX, int centerY, int width, int height) {
 		this.world = world;
 		this.centerX = centerX;

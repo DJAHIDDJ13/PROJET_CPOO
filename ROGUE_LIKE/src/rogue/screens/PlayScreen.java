@@ -29,7 +29,7 @@ public class PlayScreen implements Screen {
     	this.centerY = s.centerX;
         screenWidth = 80;
         screenHeight = 21;
-        savedGame = new SavedGame(s.world, 0, 0,s.world.width() , s.world.height());
+        savedGame = new SavedGame(s.world, 0, 0, 200 , 200);
     }
     private void createWorld(){
     	int width = 200;
@@ -60,6 +60,7 @@ public class PlayScreen implements Screen {
    
         displayTiles(terminal, left, top);
         terminal.write('X', centerX - left, centerY - top);
+        terminal.write(centerX+" "+centerY, 2, 22);
 
    }
     private void scrollBy(int mx, int my){
