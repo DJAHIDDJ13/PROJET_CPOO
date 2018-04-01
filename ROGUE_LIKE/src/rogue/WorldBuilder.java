@@ -2,6 +2,10 @@ package rogue;
 
 import java.awt.Rectangle;
 
+import org.jgrapht.alg.PrimMinimumSpanningTree;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+
 public class WorldBuilder {
 	private int width;
 	private int height;
@@ -17,10 +21,10 @@ public class WorldBuilder {
 		return new World(tiles);
 	}
 	private WorldBuilder makeRooms() {
-		int maxWidth = 50;
-		int minWidth = 20;
+		int maxWidth = 15;
+		int minWidth = 5;
 		double rectangularity = 0.3;
-		int nbrRooms = 2;
+		int nbrRooms = 300;
 		int nbr = 0;
 		Room[] rooms = new Room[nbrRooms];
 		// initializing the world with walls
@@ -39,10 +43,9 @@ public class WorldBuilder {
 			h = h<minWidth?minWidth:h;
 			n = new Rectangle(x, y, w, h);
 			for(int i=0; i<nbr; i++) {
-				if(n.intersects(rooms[i].getRect())) 
+				if(n.intersects(rooms[i].getRect()))
 					continue while_1;
 			}
-			System.out.println(n.getX()+ "x room y" + n.getY()+";"+w +"w room h"+h);
 			rooms[nbr] = new Room(n);
 			nbr++;
 		} while(nbr<nbrRooms);
@@ -54,7 +57,21 @@ public class WorldBuilder {
 				}
 			}
 		}
-		tiles = rooms[0].connectRoom(rooms[1], tiles);
+		SimpleWeightedGraph<Room, DefaultWeightedEdge> graph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+		for(int i=0; i<nbrRooms; i++) {
+			graph.addVertex(rooms[i]);
+		}
+		for(int i=0; i<nbrRooms; i++) {
+				graph.addVertex(rooms[i]);
+			for(int j=i+1; j<nbrRooms; j++) {
+				DefaultWeightedEdge e = graph.addEdge(rooms[i], rooms[j]);
+				graph.setEdgeWeight(e, rooms[i].dist(rooms[j]));
+			}
+		}
+		PrimMinimumSpanningTree<Room, DefaultWeightedEdge> MST = new PrimMinimumSpanningTree<>(graph);
+		for(DefaultWeightedEdge e:MST.getMinimumSpanningTreeEdgeSet()) {
+			graph.getEdgeSource(e).connectRoom(graph.getEdgeTarget(e), tiles);
+		}
 		return this;
 	}
 	public WorldBuilder makeCaves() {
