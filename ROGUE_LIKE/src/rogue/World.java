@@ -29,4 +29,14 @@ public class World {
         return tile(x, y).color();
     }
 
+	public void addAtEmptyLocation(Creature creature){
+	    int x, y;
+	    do {
+	        x = (int)(Math.random() * width);
+	        y = (int)(Math.random() * height);
+	    } while (!tile(x,y).isGround());
+	    creature.x = x;
+	    creature.y = y;
+	}
+
 }

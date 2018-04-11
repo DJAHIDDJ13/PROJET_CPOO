@@ -4,7 +4,7 @@ import asciiPanel.AsciiPanel;
 
 public enum Tile {
     FLOOR('.', AsciiPanel.yellow),
-    WALL('@', AsciiPanel.green),
+    WALL('@', AsciiPanel.blue),
     BOUNDS('x', AsciiPanel.brightBlack);
 
     private char glyph;
@@ -17,4 +17,8 @@ public enum Tile {
         this.glyph = glyph;
         this.color = color;
     }
+
+	public boolean isGround() {
+		return this == Tile.FLOOR;
+	}
 }
