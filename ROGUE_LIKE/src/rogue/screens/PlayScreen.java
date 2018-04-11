@@ -31,6 +31,8 @@ public class PlayScreen implements Screen {
         screenWidth = 80;
         screenHeight = 21;
         savedGame = new SavedGame(s.world, 0, 0, 200 , 200);
+        CreatureFactory creatureFactory = new CreatureFactory(world);
+        player = creatureFactory.newPlayer(s.centerX, s.centerY);
     }
     private void createWorld(){
     	int width = 200;

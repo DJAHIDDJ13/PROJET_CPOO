@@ -39,4 +39,9 @@ public class World {
 	    creature.y = y;
 	}
 
+	public void addAtLocation(Creature player, int centerX, int centerY) {
+		player.x = centerX;
+		player.x = centerX;		
+	}
+
 }

@@ -15,4 +15,11 @@ public class CreatureFactory {
 		new PlayerAi(player);
 		return player;
 	}
+
+	public Creature newPlayer(int centerX, int centerY) {
+		Creature player = new Creature(world, '$', AsciiPanel.brightWhite);
+		world.addAtLocation(player, centerX, centerY);
+		new PlayerAi(player);
+		return player;
+	}
 }
