@@ -11,13 +11,15 @@ public class LoadScreen implements Screen{
 	private int showStart = 0;
 	String[] savedFiles = getSavedFiles();
 	public void displayOutput(AsciiPanel terminal) {
+		if(savedFiles==null) {
+			terminal.writeCenter("No safeguards available", 5);
+			return;
+		}
 		Arrays.sort(savedFiles);
 		terminal.writeCenter("Saved Games:", 2);
-		int j=0;
 		for(int i=showStart; i<savedFiles.length; i++) {
-			if(5+j*3<22) {
-				terminal.writeCenter(savedFiles[i], 5+j*3, new Color(255,255,i==selected?0:255));
-				j++;
+			if(5+i*3<22) {
+				terminal.writeCenter(savedFiles[i], 5+i*3, new Color(255,255,i==selected?0:255));
 			}
 		}
 		
@@ -51,9 +53,14 @@ public class LoadScreen implements Screen{
 	public static String[] getSavedFiles() {
 		File f = new File(System.getProperty("user.home") + File.separator + ".savedRlGames");
 		File[] files = f.listFiles();
-		String[] fileNames = new String[files.length];
-		for(int i=0; i<files.length; i++) {
-			fileNames[i] = files[i].getName();
+		String[] fileNames;
+		if(files != null) {
+			fileNames = new String[files.length];
+			for(int i=0; i<files.length; i++) {
+				fileNames[i] = files[i].getName();
+			}
+		} else {
+			fileNames = null;
 		}
 		return fileNames;
 		
