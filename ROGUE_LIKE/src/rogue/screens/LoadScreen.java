@@ -27,7 +27,11 @@ public class LoadScreen implements Screen{
 	public Screen respondToUserInput(KeyEvent key) {
 		
 		switch(key.getKeyCode()) {
-		case KeyEvent.VK_ENTER: return new PlayScreen(System.getProperty("user.home") + File.separator + ".savedRlGames"+ File.separator + savedFiles[selected]);
+		case KeyEvent.VK_ENTER: 
+			if(savedFiles != null)
+				return new PlayScreen(System.getProperty("user.home") + File.separator + ".savedRlGames"+ File.separator + savedFiles[selected]);
+			else
+				return new LoadScreen();
 		case KeyEvent.VK_ESCAPE: return new StartScreen();
 		case KeyEvent.VK_DOWN:
 			selected = Math.floorMod(selected+1, savedFiles.length);

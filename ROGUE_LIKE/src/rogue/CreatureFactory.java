@@ -10,14 +10,14 @@ public class CreatureFactory {
 	}
 	
 	public Creature newPlayer(){
-		Creature player = new Creature(world, '$', AsciiPanel.brightWhite);
+		Creature player = new Creature(world, '$', AsciiPanel.brightWhite, AsciiPanel.yellow);
 		world.addAtEmptyLocation(player);
 		new PlayerAi(player);
 		return player;
 	}
 
 	public Creature newPlayer(int centerX, int centerY) {
-		Creature player = new Creature(world, '$', AsciiPanel.brightWhite);
+		Creature player = new Creature(world, '$', AsciiPanel.brightWhite, AsciiPanel.yellow);
 		world.addAtLocation(player, centerX, centerY);
 		new PlayerAi(player);
 		return player;

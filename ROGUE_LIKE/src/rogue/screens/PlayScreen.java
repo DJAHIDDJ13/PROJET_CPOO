@@ -25,12 +25,10 @@ public class PlayScreen implements Screen {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-    	this.world = s.world;
-    	this.player.x = s.centerX;
-    	this.player.y = s.centerX;
+    	world = s.world;
         screenWidth = 80;
         screenHeight = 21;
-        savedGame = new SavedGame(s.world, 0, 0, 200 , 200);
+        savedGame = new SavedGame(s.world, 0, 0, 200 ,200);
         CreatureFactory creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer(s.centerX, s.centerY);
     }
@@ -46,7 +44,7 @@ public class PlayScreen implements Screen {
                 int wx = x + left;
                 int wy = y + top;
                 
-                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy), world.bgColor(wx, wy));
             }
         }
     }
@@ -62,7 +60,7 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
-		terminal.write(player.glyph(), player.x - left, player.y - top, player.color());
+		terminal.write(player.glyph(), player.x - left, player.y - top, player.color(), player.getBgColor());
         terminal.write(player.x+" "+player.y, 2, 22);
 
    }

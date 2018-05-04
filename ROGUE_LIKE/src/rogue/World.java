@@ -41,7 +41,10 @@ public class World {
 
 	public void addAtLocation(Creature player, int centerX, int centerY) {
 		player.x = centerX;
-		player.x = centerX;		
+		player.y = centerY;		
+	}
+	public Color bgColor(int wx, int wy) {
+		return tiles[wx][wy].getBgColor();
 	}
 
 }
