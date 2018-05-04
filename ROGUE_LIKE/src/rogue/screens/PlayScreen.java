@@ -1,5 +1,6 @@
 package rogue.screens;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
 
@@ -17,8 +18,16 @@ public class PlayScreen implements Screen {
         createWorld();
         CreatureFactory creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer();
+        createCreatures(creatureFactory);
     }
-    public PlayScreen(String path) {
+    private void createCreatures(CreatureFactory creatureFactory){
+        player = creatureFactory.newPlayer();
+      
+        for (int i = 0; i < 8; i++){
+            creatureFactory.newFungus();
+        }
+    }
+	public PlayScreen(String path) {
     	SavedGame s = new SavedGame(null, 0, 0, 0, 0);
     	try {
 			s = s.loadGame(path);
@@ -43,8 +52,15 @@ public class PlayScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-                
-                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy), world.bgColor(wx, wy));
+                if (player.canSee(wx, wy)) {
+                    Creature creature = world.creature(wx, wy);
+                    if (creature != null)
+                        terminal.write(creature.glyph(), creature.x - left, creature.y - top, creature.color());
+                    else
+                        terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+                } else {
+                    terminal.write(world.glyph(wx, wy), x, y, Color.darkGray);
+                }
             }
         }
     }

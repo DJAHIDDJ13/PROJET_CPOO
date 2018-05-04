@@ -1,5 +1,6 @@
 package rogue;
 import java.awt.Color;
+import java.util.List;
 
 public class World {
     private Tile[][] tiles;
@@ -46,5 +47,17 @@ public class World {
 	public Color bgColor(int wx, int wy) {
 		return tiles[wx][wy].getBgColor();
 	}
+	private List<Creature> creatures;
+	public Creature creature(int x, int y) {
+	    for (Creature c : creatures){
+	        if (c.x == x && c.y == y)
+	            return c;
+	    }
+	    return null;
+	}
 
+	public int depth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
