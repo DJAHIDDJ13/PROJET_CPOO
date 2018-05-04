@@ -64,6 +64,7 @@ public class PlayScreen implements Screen {
             }
         }
     }
+   
     public int getScrollX() {
         return Math.max(0, Math.min(player.x - screenWidth / 2, world.width() - screenWidth));
     }
