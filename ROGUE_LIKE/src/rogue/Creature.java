@@ -31,14 +31,6 @@ public class Creature {
 	public void moveBy(int mx, int my){
 		ai.onEnter(x+mx, y+my, world.tile(x+mx, y+my));
 	}
-	private int visionRadius;
-    public int visionRadius() { return visionRadius; }
 
-    public boolean canSee(int wx, int wy){
-        return ai.canSee(wx, wy);
-    }
 
-    public Tile tile(int wx, int wy) {
-        return world.tile(wx, wy);
-    }
 }

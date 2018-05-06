@@ -3,13 +3,13 @@ import java.awt.Color;
 import asciiPanel.AsciiPanel;
 
 public enum Tile {
-    FLOOR ('.', AsciiPanel.white,      AsciiPanel.black      ),
-    WALL  ('@', new Color(255,255,255),new Color(0,255,0)    ),
-    BOUNDS('x', AsciiPanel.brightBlack,AsciiPanel.brightBlack),
-    UNKNOWN(' ', AsciiPanel.white, AsciiPanel.brightBlack);
+    FLOOR('.', AsciiPanel.white,AsciiPanel.black),
+    WALL('@', new Color(255,255,255),new Color(0,255,0)),
+    BOUNDS('x', AsciiPanel.brightBlack,AsciiPanel.brightBlack);
 
     private char glyph;
     public char glyph() { return glyph; }
+
     private Color color;
     public Color color() { return color; }
     private Color bgColor;
@@ -26,5 +26,4 @@ public enum Tile {
 	public Color getBgColor() {
 		return this.bgColor;
 	}
-
 }
