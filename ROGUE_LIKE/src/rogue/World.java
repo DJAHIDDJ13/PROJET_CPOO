@@ -63,4 +63,12 @@ public class World {
 		}
 		return null;
 	}
+	public void updateCreatures() {
+		List<Creature> toUpdate = new ArrayList<Creature>(creatures);
+		for(Creature c: toUpdate)
+			c.update();
+	}
+	public void remove(Creature c) {
+		creatures.remove(c);
+	}
 }

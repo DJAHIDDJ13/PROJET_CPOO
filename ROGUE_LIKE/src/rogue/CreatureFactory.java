@@ -27,8 +27,7 @@ public class CreatureFactory {
 	public Creature newPlant() {
 		Creature plant = new Creature(world, 'p', new Color(0, 255, 0), new Color(20,200,20));
 		world.addAtEmptyLocation(plant);
-		new PlantAi(plant);
+		new PlantAi(plant, this, 0);
 		return plant;
 	}
-	
 }

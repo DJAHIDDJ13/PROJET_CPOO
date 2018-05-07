@@ -19,9 +19,7 @@ public class PlayScreen implements Screen {
         createWorld();
         creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer();
-        for(int i=0; i<100; i++) {
-        	creatureFactory.newPlant();
-        }
+        populateWorld();
     }
     public PlayScreen(String path) {
     	SavedGame s = new SavedGame(null, 0, 0, 0, 0);
@@ -36,6 +34,9 @@ public class PlayScreen implements Screen {
         savedGame = new SavedGame(s.world, 0, 0, 200 ,200);
         creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer(s.centerX, s.centerY);
+        populateWorld();
+    }
+    private void populateWorld(){
         for(int i=0; i<100; i++) {
         	creatureFactory.newPlant();
         }

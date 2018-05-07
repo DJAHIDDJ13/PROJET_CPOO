@@ -7,7 +7,6 @@ public class Creature {
 	
 	public int x;
 	public int y;
-	
 	private char glyph;
 	public char glyph() { return glyph; }
 	
@@ -29,8 +28,22 @@ public class Creature {
 	}
 	
 	public void moveBy(int mx, int my){
-		ai.onEnter(x+mx, y+my, world.tile(x+mx, y+my));
+		world.updateCreatures();
+		Creature c = world.getCreature(x+mx, y+my);
+		if(c == null)
+			ai.onEnter(x+mx, y+my, world.tile(x+mx, y+my));
+		else 
+			attack(c);
+	}
+	public void attack(Creature other) {
+		world.remove(other);
 	}
 
+	public void update() {
+		ai.onUpdate();
+	}
 
+	public boolean canEnter(int x, int y) {
+		return world.tile(x,y).isGround() && world.getCreature(x, y) == null; 
+	}
 }
