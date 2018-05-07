@@ -2,6 +2,7 @@ package rogue.screens;
 
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import asciiPanel.AsciiPanel;
 import rogue.*;
@@ -11,12 +12,16 @@ public class PlayScreen implements Screen {
     private int screenHeight;
     private SavedGame savedGame;
     private Creature player;
+    private CreatureFactory creatureFactory;
     public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
-        CreatureFactory creatureFactory = new CreatureFactory(world);
+        creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer();
+        for(int i=0; i<100; i++) {
+        	creatureFactory.newPlant();
+        }
     }
     public PlayScreen(String path) {
     	SavedGame s = new SavedGame(null, 0, 0, 0, 0);
@@ -29,8 +34,11 @@ public class PlayScreen implements Screen {
         screenWidth = 80;
         screenHeight = 21;
         savedGame = new SavedGame(s.world, 0, 0, 200 ,200);
-        CreatureFactory creatureFactory = new CreatureFactory(world);
+        creatureFactory = new CreatureFactory(world);
         player = creatureFactory.newPlayer(s.centerX, s.centerY);
+        for(int i=0; i<100; i++) {
+        	creatureFactory.newPlant();
+        }
     }
     private void createWorld(){
     	int width = 200;
@@ -43,9 +51,14 @@ public class PlayScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-                
                 terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy), world.bgColor(wx, wy));
             }
+        }
+        List<Creature> creatures = world.getCreature();
+        for(Creature c : creatures) {
+        	if(c.x >= left && c.x < left+screenWidth && c.y >= top  && c.y < top+screenHeight) {
+        		terminal.write(c.glyph(), c.x-left, c.y-top, c.color(), c.bgColor());
+        	}
         }
     }
     public int getScrollX() {
@@ -60,7 +73,6 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
-		terminal.write(player.glyph(), player.x - left, player.y - top, player.color(), player.getBgColor());
         terminal.write(player.x+" "+player.y, 2, 22);
 
    }

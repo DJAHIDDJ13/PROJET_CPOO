@@ -1,5 +1,7 @@
 package rogue;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 public class World {
     private Tile[][] tiles;
@@ -34,17 +36,31 @@ public class World {
 	    do {
 	        x = (int)(Math.random() * width);
 	        y = (int)(Math.random() * height);
-	    } while (!tile(x,y).isGround());
+	    } while (!tile(x,y).isGround() || getCreature(x, y) != null);
 	    creature.x = x;
 	    creature.y = y;
+	    creatures.add(creature);
 	}
 
 	public void addAtLocation(Creature player, int centerX, int centerY) {
 		player.x = centerX;
-		player.y = centerY;		
+		player.y = centerY;
+		creatures.add(player);
 	}
 	public Color bgColor(int wx, int wy) {
 		return tiles[wx][wy].getBgColor();
 	}
-
+	List<Creature> creatures = new ArrayList<Creature>();
+	public List<Creature> getCreature(){
+		return creatures;
+	}
+	public Creature getCreature(int x, int y) {
+		if(creatures == null)
+			return null;
+		for(Creature c : creatures) {
+			if(c.x == x && c.y == y)
+				return c;
+		}
+		return null;
+	}
 }

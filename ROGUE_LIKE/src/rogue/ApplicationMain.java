@@ -18,6 +18,7 @@ public class ApplicationMain extends JFrame implements KeyListener {
         add(terminal);
         pack();
         setResizable(false);
+        setTitle("ROGUE");
         screen = new StartScreen();
         addKeyListener(this);
         repaint();

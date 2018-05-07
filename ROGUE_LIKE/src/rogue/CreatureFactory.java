@@ -1,5 +1,7 @@
 package rogue;
 
+import java.awt.Color;
+
 import asciiPanel.AsciiPanel;
 
 public class CreatureFactory {
@@ -22,4 +24,11 @@ public class CreatureFactory {
 		new PlayerAi(player);
 		return player;
 	}
+	public Creature newPlant() {
+		Creature plant = new Creature(world, 'p', new Color(0, 255, 0), new Color(20,200,20));
+		world.addAtEmptyLocation(plant);
+		new PlantAi(plant);
+		return plant;
+	}
+	
 }

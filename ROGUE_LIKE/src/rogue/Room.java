@@ -23,7 +23,11 @@ public class Room {
 		int cmpt = 0;
 		double cst = 18.43;
 		while(x0!=x1 || y0!=y1) {
-			tiles[x0][y0] = Tile.FLOOR;
+			try {
+				tiles[x0][y0] = Tile.FLOOR;
+			} catch(ArrayIndexOutOfBoundsException e) {
+				continue;
+			}
 			double a = -1*Math.toDegrees(Math.atan2((y1-y0), (x1-x0)));
 			if(a>-cst && a<cst) {
 				x0++;

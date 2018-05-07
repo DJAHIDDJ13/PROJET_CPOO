@@ -15,7 +15,7 @@ public class Creature {
 	public Color color() { return color; }
 
 	private Color bgColor;
-	public Color getBgColor() {
+	public Color bgColor() {
 		return bgColor;
 	}
 	private CreatureAi ai;
