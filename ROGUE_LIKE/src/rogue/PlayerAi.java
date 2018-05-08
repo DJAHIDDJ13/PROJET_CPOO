@@ -8,7 +8,6 @@ public class PlayerAi extends CreatureAi {
 		this.messages = messages;
 	}
 
-
 	public void onEnter(int x, int y, Tile tile){
 		if (tile.isGround()){
 			creature.x = x;

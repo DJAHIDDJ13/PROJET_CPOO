@@ -26,6 +26,8 @@ public class Room {
 			try {
 				tiles[x0][y0] = Tile.FLOOR;
 			} catch(ArrayIndexOutOfBoundsException e) {
+				x0=x1;
+				y0=y1;
 				continue;
 			}
 			double a = -1*Math.toDegrees(Math.atan2((y1-y0), (x1-x0)));

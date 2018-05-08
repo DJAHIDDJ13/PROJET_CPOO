@@ -19,7 +19,7 @@ public class Creature {
 	}
 	private CreatureAi ai;
 	public void setCreatureAi(CreatureAi ai) { this.ai = ai; }
-	
+	public CreatureAi getCreatureAi() {return this.ai; }
 	public Creature(World world, char glyph, Color color,
 			        Color bgColor, int maxHp, int attack, int defense){
 		this.world = world;
@@ -33,12 +33,16 @@ public class Creature {
 	}
 	
 	public void moveBy(int mx, int my){
-		world.updateCreatures();
 		Creature c = world.getCreature(x+mx, y+my);
 		if(c == null)
 			ai.onEnter(x+mx, y+my, world.tile(x+mx, y+my));
-		else 
-			attack(c);
+		else {
+			if(getCreatureAi() instanceof PlayerAi)
+				attack(c);
+			else
+				if(c.getCreatureAi() instanceof PlayerAi)
+					attack(c);
+		}
 	}
 	private int hp;
 	private int maxHp;

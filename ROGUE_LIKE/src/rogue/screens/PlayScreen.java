@@ -44,6 +44,9 @@ public class PlayScreen implements Screen {
         for(int i=0; i<100; i++) {
         	creatureFactory.newPlant();
         }
+        for(int i=0; i<50; i++) {
+        	creatureFactory.newMole();
+        }
     }
     private void displayMessages(AsciiPanel terminal, List<String> messages) {
     	int top = screenHeight - messages.size();
@@ -85,12 +88,15 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
-        terminal.write("hp", 0,22);
-        terminal.write('|', 2, 22);
-        terminal.write('|', 23, 22);
+        terminal.write("hp[", 0,22);
+        terminal.write(']', 23, 22);
+        int stopVal = (int)((double)player.getHp()*20/player.getMaxHp());
         for(int i=0; i<20; i++) {
-        	if(i/20 < player.getHp()/player.getMaxHp())
-        		terminal.write((char)178, i+3, 22);
+        	if(i < stopVal)
+                terminal.write((char)178,3+i,22);
+        	else
+        		terminal.write(' ',3+i,22);
+
         }
         displayMessages(terminal, messages);
 }
@@ -113,7 +119,7 @@ public class PlayScreen implements Screen {
 	        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
 	        case KeyEvent.VK_ENTER: return new WinScreen();
         }
-    
+		world.updateCreatures();
         return this;
     }
 }
