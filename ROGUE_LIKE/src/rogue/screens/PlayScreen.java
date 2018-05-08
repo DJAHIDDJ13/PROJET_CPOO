@@ -2,6 +2,7 @@ package rogue.screens;
 
 import java.awt.event.KeyEvent;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 
 import asciiPanel.AsciiPanel;
@@ -13,12 +14,14 @@ public class PlayScreen implements Screen {
     private SavedGame savedGame;
     private Creature player;
     private CreatureFactory creatureFactory;
+    private List<String> messages;
     public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
         creatureFactory = new CreatureFactory(world);
-        player = creatureFactory.newPlayer();
+        messages = new ArrayList<String>();
+        player = creatureFactory.newPlayer(messages);
         populateWorld();
     }
     public PlayScreen(String path) {
@@ -33,13 +36,21 @@ public class PlayScreen implements Screen {
         screenHeight = 21;
         savedGame = new SavedGame(s.world, 0, 0, 200 ,200);
         creatureFactory = new CreatureFactory(world);
-        player = creatureFactory.newPlayer(s.centerX, s.centerY);
+        messages = new ArrayList<String>();
+        player = creatureFactory.newPlayer(s.centerX, s.centerY, messages);
         populateWorld();
     }
     private void populateWorld(){
         for(int i=0; i<100; i++) {
         	creatureFactory.newPlant();
         }
+    }
+    private void displayMessages(AsciiPanel terminal, List<String> messages) {
+    	int top = screenHeight - messages.size();
+    	for(int i=0; i<messages.size(); i++) {
+    		terminal.writeCenter(messages.get(i), top+i);
+    	}
+    	messages.clear();
     }
     private void createWorld(){
     	int width = 200;
@@ -74,9 +85,15 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
-        terminal.write(player.x+" "+player.y, 2, 22);
-
-   }
+        terminal.write("hp", 0,22);
+        terminal.write('|', 2, 22);
+        terminal.write('|', 23, 22);
+        for(int i=0; i<20; i++) {
+        	if(i/20 < player.getHp()/player.getMaxHp())
+        		terminal.write((char)178, i+3, 22);
+        }
+        displayMessages(terminal, messages);
+}
 
     public Screen respondToUserInput(KeyEvent key) {
     	savedGame.update(player.x, player.y);

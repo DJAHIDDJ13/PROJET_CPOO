@@ -10,7 +10,7 @@ public class PlantAi extends CreatureAi {
 		this.childLevel = childLevel;
 	}
 	public void onUpdate() {
-		if(Math.random()<0.005)
+		if(Math.random()<0.005) 
 			spread();
 	}
 	private void spread() {
@@ -23,7 +23,9 @@ public class PlantAi extends CreatureAi {
 				new PlantAi(c, factory, childLevel+1);
 				c.x = x;
 				c.y = y;
+				creature.doAction("spawn a child");
 			}
 		}
 	}
+
 }
