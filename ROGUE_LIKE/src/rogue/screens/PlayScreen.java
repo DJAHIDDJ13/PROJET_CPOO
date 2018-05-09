@@ -1,7 +1,7 @@
 package rogue.screens;
 
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,20 +25,17 @@ public class PlayScreen implements Screen {
         populateWorld();
     }
     public PlayScreen(String path) {
-    	SavedGame s = new SavedGame(null, 0, 0, 0, 0);
-    	try {
-			s = s.loadGame(path);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-    	world = s.world;
-        screenWidth = 80;
-        screenHeight = 21;
-        savedGame = new SavedGame(s.world, 0, 0, 200 ,200);
         creatureFactory = new CreatureFactory(world);
         messages = new ArrayList<String>();
-        player = creatureFactory.newPlayer(s.centerX, s.centerY, messages);
-        populateWorld();
+    	savedGame = new SavedGame(null);
+		try {
+			world = savedGame.loadGame(path, messages, creatureFactory);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        screenWidth = 80;
+        screenHeight = 21;
+        player = world.getCreature().get(0);
     }
     private void populateWorld(){
         for(int i=0; i<100; i++) {
@@ -59,7 +56,7 @@ public class PlayScreen implements Screen {
     	int width = 200;
     	int height = 200;
         world = new WorldBuilder(width, height).makeCaves().build();
-        savedGame = new SavedGame(world, 0, 0, width, height);
+        savedGame = new SavedGame(world);
     }
     private void displayTiles(AsciiPanel terminal, int left, int top) {
         for (int x = 0; x < screenWidth; x++){
@@ -102,7 +99,7 @@ public class PlayScreen implements Screen {
 }
 
     public Screen respondToUserInput(KeyEvent key) {
-    	savedGame.update(player.x, player.y);
+    	savedGame.update(world.getCreature());
         switch (key.getKeyCode()){
 	        case KeyEvent.VK_LEFT:
 	        case KeyEvent.VK_H: player.moveBy(-1, 0); break;
@@ -118,6 +115,7 @@ public class PlayScreen implements Screen {
 	        case KeyEvent.VK_N: player.moveBy( 1, 1); break;
 	        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
 	        case KeyEvent.VK_ENTER: return new WinScreen();
+	        default: return this;
         }
 		world.updateCreatures();
         return this;

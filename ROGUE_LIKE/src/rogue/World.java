@@ -54,6 +54,9 @@ public class World {
 	public List<Creature> getCreature(){
 		return creatures;
 	}
+	public void setCreatures(List<Creature> c) {
+		creatures = c;
+	}
 	public Creature getCreature(int x, int y) {
 		if(creatures == null)
 			return null;
