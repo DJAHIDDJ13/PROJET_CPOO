@@ -27,13 +27,17 @@ public class Creature {
 
 	private Inventory inventory;
 	public Inventory inventory() { return inventory; }
+	private int maxFood;
+	public int maxFood() { return maxFood; }
+	
+	private int food;
+	public int food() { return food; }
 
 	public Creature(World world, char glyph, Color color, String name,
-			        Color bgColor, int maxHp, int attack, int defense){
+			        int maxHp, int attack, int defense){
 		this.world = world;
 		this.glyph = glyph;
 		this.color = color;
-		this.bgColor = bgColor;
 		this.maxHp = maxHp;
 		hp = maxHp;
 		AttackValue = attack;
@@ -41,6 +45,23 @@ public class Creature {
 		visionRadius = 9;
 		this.name = name;
 		this.inventory = new Inventory(20);
+		this.maxFood = 1000;
+		this.food = maxFood;
+	}
+	public Creature(World world, char glyph, Color color, String name,
+	         int maxHp, int attack, int defense, int food){
+		this.world = world;
+		this.glyph = glyph;
+		this.color = color;
+		this.maxHp = maxHp;
+		hp = maxHp;
+		AttackValue = attack;
+		DefenseValue = defense;
+		visionRadius = 9;
+		this.name = name;
+		this.inventory = new Inventory(20);
+		this.maxFood = 1000;
+		this.food = food;
 	}
 	
 	public void moveBy(int mx, int my){
@@ -73,6 +94,11 @@ public class Creature {
 				int amount = Math.max(attackValue()-c.DefenseValue, 0);
 				amount = (int)((Math.random()+0.5)*amount);
 				c.takeDamage(-amount);
+			} else if(c.getCreatureAi() instanceof PlayerAi) {
+				int amount = Math.max(attackValue()-c.DefenseValue, 0);
+				amount = (int)((Math.random()+0.5)*amount);
+				c.takeDamage(-amount);				
+				doAction("attack the '%s' for %d damage", c.glyph, amount);
 			}
 		} else {
 			int amount = Math.max(attackValue()-c.DefenseValue, 0);
@@ -81,14 +107,24 @@ public class Creature {
 			doAction("attack the '%s' for %d damage", c.glyph, amount);
 		}
 	}
+	private void leaveCorpse(){
+		if(glyph == 'h')
+			return;
+		Item corpse = new Item('%', color, name + " corpse");
+		int multiplier = (glyph=='m')?20:2;
+		corpse.modifyFoodValue(maxHp*multiplier);
+		world.addAtEmptySpace(corpse, x, y);
+	}
 	public void takeDamage(int amount) {
 		hp += amount;
 		if(hp <= 0) {
-			world.remove(this);
 	        doAction("die");
+			leaveCorpse();
+			world.remove(this);
 		}
 	}
 	public void update() {
+		modifyFood(-1);
 		ai.onUpdate();
 	}
 
@@ -105,6 +141,22 @@ public class Creature {
 	}
 	public void notify(String message, Object ...params) {
 		ai.onNotify(String.format(message, params));
+	}
+	public void Hint(String message, Object ... params){
+        int r = 2;
+        for (int ox = -r; ox < r+1; ox++){
+        	for (int oy = -r; oy < r+1; oy++){
+        	 	if (ox*ox + oy*oy > r*r)
+            	 	continue;
+         
+             	Creature other = world.getCreature(x+ox, y+oy);
+         
+             	if (other == null)
+            	 	continue;
+         
+            	other.notify(message);
+         	}
+        }
 	}
 	public void doAction(String message, Object ... params){
         int r = 9;
@@ -144,16 +196,18 @@ public class Creature {
 	public Tile tile(int wx, int wy) {
 		return world.tile(wx, wy);
 	}
-	public void pickup(){
+	public boolean pickup(){
 		Item item = world.item(x, y);
-		
 		if (inventory.isFull() || item == null){
 			doAction("grab at the ground");
+		}else if(item.glyph() == '*') {
+			return true;
 		} else {
 			doAction("pickup a %s", item.name());
 			world.remove(x, y);
 			inventory.add(item);
 		}
+		return false;
 	}
 	
 	public void drop(Item item){
@@ -166,5 +220,24 @@ public class Creature {
 	}
 	public void setInventory(Inventory inventory) {
 		this.inventory = inventory;
+	}
+	public void modifyFood(int amount) { 
+		food = Math.max(0,Math.min(maxFood, food+amount));
+		
+		if (food < 1 && isPlayer()) {
+			takeDamage(-10);
+		}
+	}
+	
+	public boolean isPlayer(){
+		return glyph == '$';
+	}
+	
+	public void eat(Item item){
+		if (item.foodValue() < 0)
+			notify("Gross!");
+		
+		modifyFood(item.foodValue());
+		inventory.remove(item);
 	}
 }

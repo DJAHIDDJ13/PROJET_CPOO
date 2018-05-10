@@ -25,7 +25,7 @@ public abstract class InventoryBasedScreen implements Screen {
 		
 		int y = 23 - lines.size();
 		int x = 4;
-		terminal.write("     ", 0,22);
+		terminal.write("                                  ", 0,22);
 		if (lines.size() > 0)
 			terminal.clear(' ', x, y, 20, lines.size());
 		

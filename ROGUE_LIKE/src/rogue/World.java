@@ -57,9 +57,7 @@ public class World {
 		player.y = centerY;
 		creatures.add(player);
 	}
-	public Color bgColor(int wx, int wy) {
-		return tiles[wx][wy].getBgColor();
-	}
+
 	List<Creature> creatures = new ArrayList<Creature>();
 	public List<Creature> getCreature(){
 		return creatures;
@@ -90,7 +88,7 @@ public class World {
 		return items[x][y];
 	}
 	
-	public void addAtEmptyLocation(Item item) {
+	public int[] addAtEmptyLocation(Item item) {
 		int x;
 		int y;
 		
@@ -99,8 +97,9 @@ public class World {
 			y = (int)(Math.random() * height);
 		} 
 		while (!tile(x,y).isGround() || item(x,y) != null);
-		
+		int[] res = {x,y};
 		items[x][y] = item;
+		return res;
 	}
 
 	public void remove(int x, int y) {
@@ -123,7 +122,7 @@ public class World {
 			if (!tiles[p.x][p.y].isGround())
 				continue;
 				
-			if (items[p.x][p.y] == null){
+			if (items[p.x][p.y] == null) {
 				items[p.x][p.y] = item;
 				Creature c = this.getCreature(p.x, p.y);
 				if (c != null)

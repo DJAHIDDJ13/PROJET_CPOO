@@ -18,6 +18,7 @@ public class SavedGame {
 	private int[] player;
 	private int[][] moles;
 	private int[][] plants;
+	private int[][] hints;
 	private char[][] world;
 	private char[] items;
 	public SavedGame(World world) {
@@ -41,18 +42,23 @@ public class SavedGame {
 		try {
 			int moleC = 0;
 			int plantC = 0;
+			int hintC = 0;
 			for(Creature c: creatures) {
 				if(c.getCreatureAi() instanceof PlantAi) {
 					plantC++;
 				} else if(c.getCreatureAi() instanceof MoleAi) {
 					moleC++;
+				} else if(c.getCreatureAi() instanceof HintAi) {
+					hintC++;
 				}
 			}
-			player = new int[6];
+			player = new int[7];
 			plants = new int[plantC][5];
 			moles = new int[moleC][4];
+			hints = new int[hintC][2];
 			moleC = 0;
 			plantC = 0;
+			hintC = 0;
 			for(Creature c: creatures) {
 				if(c.getCreatureAi() instanceof PlayerAi) {
 					this.player[0] = c.x;
@@ -61,6 +67,7 @@ public class SavedGame {
 					this.player[3] = c.getMaxHp();
 					this.player[4] = c.attackValue();
 					this.player[5] = c.defenseValue();
+					this.player[6] = c.food();
 					pl = c;
 				} else if(c.getCreatureAi() instanceof PlantAi) {
 					plants[plantC] = new int[5];
@@ -79,12 +86,18 @@ public class SavedGame {
 					this.moles[moleC][4] = c.attackValue();
 					this.moles[moleC][5] = c.defenseValue();
 					moleC++;
-				}
+				} else if(c.getCreatureAi() instanceof HintAi) {
+					hints[hintC] = new int[2];
+					this.hints[hintC][0] = c.x;
+					this.hints[hintC][1] = c.y;
+					hintC++;
+				} 
 			}
 		} catch(NullPointerException e) {
 			this.player = null;
 			this.plants = null;
 			this.moles = null;
+			this.hints = null;
 		}
 		if(pl!=null) {
 			Item[] t = pl.inventory().getItems();
@@ -119,6 +132,7 @@ public class SavedGame {
 		SavedGame s = load.fromJson(reader, SavedGame.class);
 		Tile[][] tiles = new Tile[s.world.length][s.world[0].length];	
 		List<int[]> items = new ArrayList<int[]>(); 
+		int goalX = 0, goalY = 0;
 		for(int i=0; i<s.world.length; i++) {
 			for(int j=0; j<s.world[0].length; j++) {
 				switch(s.world[i][j]) {
@@ -130,6 +144,8 @@ public class SavedGame {
 					items.add(tmp);
 					break;
 				case '*':
+					goalX = i;
+					goalY = j;
 					tiles[i][j] = Tile.FLOOR;
 					int[] tmp1 = {i, j, '*'};
 					items.add(tmp1);
@@ -155,7 +171,7 @@ public class SavedGame {
 		this.world = s.world;
 		this.player = s.player;
 		Creature d;
-		d = new Creature(w, '$', AsciiPanel.brightWhite,"player", AsciiPanel.yellow, s.player[3], s.player[4], s.player[5]);
+		d = new Creature(w, '$', AsciiPanel.brightWhite,"player", s.player[3], s.player[4], s.player[5], s.player[6]);
 		new PlayerAi(d, messages);
 		d.takeDamage(s.player[2]-s.player[3]);
 		d.x = s.player[0];
@@ -174,7 +190,7 @@ public class SavedGame {
 			}
 		c.add(d);
 		for(int i=0; i<s.plants.length; i++) {
-			Creature plant = new Creature(w, 'p', new Color(0, 255, 0),"plant", new Color(250,0,20), s.plants[i][3], 0, 0);
+			Creature plant = new Creature(w, 'p', new Color(0, 255, 0),"plant", s.plants[i][3], 0, 0);
 			plant.takeDamage(s.plants[i][2]-s.plants[i][3]);
 			new PlantAi(plant, factory, s.plants[i][4]);
 			plant.x = s.plants[i][0];
@@ -182,12 +198,19 @@ public class SavedGame {
 			c.add(plant);
 		}
 		for(int i=0; i<s.moles.length; i++) {
-			Creature mole = new Creature(w, 'm', new Color(255, 0, 0),"mole", new Color(20,100,20), s.moles[i][3], s.moles[i][4], s.moles[i][5]);
+			Creature mole = new Creature(w, 'm', new Color(255, 0, 0),"mole", s.moles[i][3], s.moles[i][4], s.moles[i][5]);
 			mole.takeDamage(s.moles[i][2]-s.moles[i][3]);
 			new MoleAi(mole);
 			mole.x = s.moles[i][0];
 			mole.y = s.moles[i][1];
 			c.add(mole);
+		}
+		for(int i=0; i<s.hints.length; i++) {
+			Creature npc = new Creature(w, 'h', new Color(255, 255, 0),"hint", 1, 0, 0);
+			npc.x = s.hints[i][0];
+			npc.y = s.hints[i][1];
+			new HintAi(npc, goalX, goalY);
+			c.add(npc);
 		}
 		w.setCreatures(c);
 		this.plants = s.plants;

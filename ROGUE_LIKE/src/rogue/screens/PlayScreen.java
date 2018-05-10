@@ -26,8 +26,9 @@ public class PlayScreen implements Screen {
         messages = new ArrayList<String>();
         player = factory.newPlayer(messages);
 		fov = new FieldOfView(world);
-        populateWorld();
 		createItems(factory);
+		int[] goal = factory.newVictoryItem();
+        populateWorld(goal[0], goal[1]);
     }
     public PlayScreen(String path) {
         factory = new Factory(world);
@@ -43,12 +44,15 @@ public class PlayScreen implements Screen {
         player = world.getCreature().get(0);
         fov = new FieldOfView(world);
     }
-    private void populateWorld(){
+    private void populateWorld(int goalX, int goalY){
         for(int i=0; i<100; i++) {
         	factory.newPlant();
         }
         for(int i=0; i<50; i++) {
         	factory.newMole();
+        }
+        for(int i=0; i<200; i++) {
+        	factory.newHint(goalX, goalY);
         }
     }
     private void displayMessages(AsciiPanel terminal, List<String> messages) {
@@ -70,17 +74,18 @@ public class PlayScreen implements Screen {
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-				if (player.canSee(wx, wy))
+				if (player.canSee(wx, wy)) {
 					terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+				}
 				else
-					terminal.write(fov.tile(wx, wy).glyph(), x, y, Color.darkGray);           }
+					terminal.write(fov.tile(wx, wy).glyph(), x, y, Color.darkGray);
+				}
         }
     }
 	private void createItems(Factory factory) {
 		for (int i = 0; i < world.width() * world.height() / 100; i++){
 			factory.newRock();
 		}
-		factory.newVictoryItem();
 	}
 	
     public int getScrollX() {
@@ -95,17 +100,24 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
    
         displayTiles(terminal, left, top);
-        terminal.write("hp[", 0,22);
-        terminal.write(']', 23, 22);
+        terminal.write("hp  [", 0,22);
+        terminal.write(']', 25, 22);
         int stopVal = (int)((double)player.getHp()*20/player.getMaxHp());
         for(int i=0; i<20; i++) {
         	if(i < stopVal)
-                terminal.write((char)178,3+i,22);
+                terminal.write((char)178,5+i,22, new Color(50,200,50));
         	else
-        		terminal.write(' ',3+i,22);
-
+        		terminal.write(' ',5+i,22);
         }
-        displayMessages(terminal, messages);
+        terminal.write("food[", 0,23);
+        terminal.write(']', 25, 23);
+        stopVal = (int)((double)player.food()/player.maxFood()*20);
+        for(int i=0; i<20; i++) {
+        	if(i < stopVal)
+                terminal.write((char)178,5+i,23, new Color(50,50,200));
+        	else
+        		terminal.write(' ',5+i,23);
+        }        displayMessages(terminal, messages);
 		if (subscreen != null)
 			subscreen.displayOutput(terminal);
 }
@@ -131,10 +143,15 @@ public class PlayScreen implements Screen {
 		        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
 		        case KeyEvent.VK_ENTER: return new WinScreen();
 				case KeyEvent.VK_D: subscreen = new DropScreen(player); break;	        case 'g':
+				case KeyEvent.VK_E: subscreen = new EatScreen(player); break;
 				default : 			
 					switch (key.getKeyChar()){
 						case 'g':
-						case ',': player.pickup(); break;
+						case ',':
+							boolean won = player.pickup();
+						if(won)
+							return new WinScreen();
+						break;
 						default : return this;
 					}
 	        }
