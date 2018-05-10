@@ -22,8 +22,13 @@ public class Creature {
 	public CreatureAi getCreatureAi() {return this.ai; }
 	private int visionRadius;
 	public int visionRadius() { return visionRadius; }
+	private String name;
+	public String name() { return name; }
 
-	public Creature(World world, char glyph, Color color,
+	private Inventory inventory;
+	public Inventory inventory() { return inventory; }
+
+	public Creature(World world, char glyph, Color color, String name,
 			        Color bgColor, int maxHp, int attack, int defense){
 		this.world = world;
 		this.glyph = glyph;
@@ -34,6 +39,8 @@ public class Creature {
 		AttackValue = attack;
 		DefenseValue = defense;
 		visionRadius = 9;
+		this.name = name;
+		this.inventory = new Inventory(20);
 	}
 	
 	public void moveBy(int mx, int my){
@@ -60,10 +67,19 @@ public class Creature {
 	}
 
 	public void attack(Creature c) {
-		int amount = Math.max(attackValue()-c.DefenseValue, 0);
-		amount = (int)((Math.random()+0.5)*amount);
-		c.takeDamage(-amount);
-		doAction("attack the '%s' for %d damage", c.glyph, amount);
+		if(!(ai instanceof PlayerAi)) {
+			if(c.getCreatureAi() instanceof PlantAi) {
+				takeDamage(5);
+				int amount = Math.max(attackValue()-c.DefenseValue, 0);
+				amount = (int)((Math.random()+0.5)*amount);
+				c.takeDamage(-amount);
+			}
+		} else {
+			int amount = Math.max(attackValue()-c.DefenseValue, 0);
+			amount = (int)((Math.random()+0.5)*amount);
+			c.takeDamage(-amount);
+			doAction("attack the '%s' for %d damage", c.glyph, amount);
+		}
 	}
 	public void takeDamage(int amount) {
 		hp += amount;
@@ -127,5 +143,28 @@ public class Creature {
 
 	public Tile tile(int wx, int wy) {
 		return world.tile(wx, wy);
+	}
+	public void pickup(){
+		Item item = world.item(x, y);
+		
+		if (inventory.isFull() || item == null){
+			doAction("grab at the ground");
+		} else {
+			doAction("pickup a %s", item.name());
+			world.remove(x, y);
+			inventory.add(item);
+		}
+	}
+	
+	public void drop(Item item){
+		if (world.addAtEmptySpace(item, x, y)){
+			doAction("drop a " + item.name());
+			inventory.remove(item);
+		} else {
+			notify("There's nowhere to drop the %s.", item.name());
+		}
+	}
+	public void setInventory(Inventory inventory) {
+		this.inventory = inventory;
 	}
 }

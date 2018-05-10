@@ -20,7 +20,7 @@ public class FieldOfView {
 		
 		for (int x = 0; x < world.width(); x++){
 			for (int y = 0; y < world.height(); y++){
-					tiles[x][y] = Tile.UNKNOWN;
+				tiles[x][y] = Tile.UNKNOWN;
 			}
 		}
 	}

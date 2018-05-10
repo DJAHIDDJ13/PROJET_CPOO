@@ -14,39 +14,41 @@ public class PlayScreen implements Screen {
     private int screenHeight;
     private SavedGame savedGame;
     private Creature player;
-    private CreatureFactory creatureFactory;
+    private Factory factory;
     private List<String> messages;
 	private FieldOfView fov;
+	private Screen subscreen;
 	public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
-        creatureFactory = new CreatureFactory(world);
+        factory = new Factory(world);
         messages = new ArrayList<String>();
-        player = creatureFactory.newPlayer(messages);
+        player = factory.newPlayer(messages);
 		fov = new FieldOfView(world);
         populateWorld();
+		createItems(factory);
     }
     public PlayScreen(String path) {
-        creatureFactory = new CreatureFactory(world);
+        factory = new Factory(world);
         messages = new ArrayList<String>();
     	savedGame = new SavedGame(null);
 		try {
-			world = savedGame.loadGame(path, messages, creatureFactory);
+			world = savedGame.loadGame(path, messages, factory);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         screenWidth = 80;
         screenHeight = 21;
-        fov = new FieldOfView(world);
         player = world.getCreature().get(0);
+        fov = new FieldOfView(world);
     }
     private void populateWorld(){
         for(int i=0; i<100; i++) {
-        	creatureFactory.newPlant();
+        	factory.newPlant();
         }
         for(int i=0; i<50; i++) {
-        	creatureFactory.newMole();
+        	factory.newMole();
         }
     }
     private void displayMessages(AsciiPanel terminal, List<String> messages) {
@@ -73,13 +75,14 @@ public class PlayScreen implements Screen {
 				else
 					terminal.write(fov.tile(wx, wy).glyph(), x, y, Color.darkGray);           }
         }
-        List<Creature> creatures = world.getCreature();
-        for(Creature c : creatures) {
-        	if(c.x >= left && c.x < left+screenWidth && c.y >= top  && c.y < top+screenHeight && player.canSee(c.x,  c.y)) {
-        		terminal.write(c.glyph(), c.x-left, c.y-top, c.color(), c.bgColor());
-        	}
-        }
     }
+	private void createItems(Factory factory) {
+		for (int i = 0; i < world.width() * world.height() / 100; i++){
+			factory.newRock();
+		}
+		factory.newVictoryItem();
+	}
+	
     public int getScrollX() {
         return Math.max(0, Math.min(player.x - screenWidth / 2, world.width() - screenWidth));
     }
@@ -103,28 +106,44 @@ public class PlayScreen implements Screen {
 
         }
         displayMessages(terminal, messages);
+		if (subscreen != null)
+			subscreen.displayOutput(terminal);
 }
 
     public Screen respondToUserInput(KeyEvent key) {
-    	savedGame.update(world.getCreature());
-        switch (key.getKeyCode()){
-	        case KeyEvent.VK_LEFT:
-	        case KeyEvent.VK_H: player.moveBy(-1, 0); break;
-	        case KeyEvent.VK_RIGHT:
-	        case KeyEvent.VK_L: player.moveBy( 1, 0); break;
-	        case KeyEvent.VK_UP:
-	        case KeyEvent.VK_K: player.moveBy( 0,-1); break;
-	        case KeyEvent.VK_DOWN:
-	        case KeyEvent.VK_J: player.moveBy( 0, 1); break;
-	        case KeyEvent.VK_Y: player.moveBy(-1,-1); break;
-	        case KeyEvent.VK_U: player.moveBy( 1,-1); break;
-	        case KeyEvent.VK_B: player.moveBy(-1, 1); break;
-	        case KeyEvent.VK_N: player.moveBy( 1, 1); break;
-	        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
-	        case KeyEvent.VK_ENTER: return new WinScreen();
-	        default: return this;
-        }
-		world.updateCreatures();
+    	savedGame = new SavedGame(world);
+    	if(subscreen != null) {
+    		subscreen = subscreen.respondToUserInput(key);
+    	} else {
+	        switch (key.getKeyCode()){
+		        case KeyEvent.VK_LEFT:
+		        case KeyEvent.VK_H: player.moveBy(-1, 0); break;
+		        case KeyEvent.VK_RIGHT:
+		        case KeyEvent.VK_L: player.moveBy( 1, 0); break;
+		        case KeyEvent.VK_UP:
+		        case KeyEvent.VK_K: player.moveBy( 0,-1); break;
+		        case KeyEvent.VK_DOWN:
+		        case KeyEvent.VK_J: player.moveBy( 0, 1); break;
+		        case KeyEvent.VK_Y: player.moveBy(-1,-1); break;
+		        case KeyEvent.VK_U: player.moveBy( 1,-1); break;
+		        case KeyEvent.VK_B: player.moveBy(-1, 1); break;
+		        case KeyEvent.VK_N: player.moveBy( 1, 1); break;
+		        case KeyEvent.VK_ESCAPE: return new SafeguardScreen(savedGame);
+		        case KeyEvent.VK_ENTER: return new WinScreen();
+				case KeyEvent.VK_D: subscreen = new DropScreen(player); break;	        case 'g':
+				default : 			
+					switch (key.getKeyChar()){
+						case 'g':
+						case ',': player.pickup(); break;
+						default : return this;
+					}
+	        }
+    	}
+		if (subscreen == null)
+			world.updateCreatures();
+		if (player.getHp() < 1)
+			return new LoseScreen();
+
         return this;
     }
 }

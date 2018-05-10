@@ -7,12 +7,10 @@ import java.util.List;
 public class Point {
 	public int x;
 	public int y;
-	public int z;
 	
-	public Point(int x, int y, int z){
+	public Point(int x, int y){
 		this.x = x;
 		this.y = y;
-		this.z = z;
 	}
 	
 	@Override
@@ -21,7 +19,6 @@ public class Point {
 		int result = 1;
 		result = prime * result + x;
 		result = prime * result + y;
-		result = prime * result + z;
 		return result;
 	}
 
@@ -38,8 +35,6 @@ public class Point {
 			return false;
 		if (y != other.y)
 			return false;
-		if (z != other.z)
-			return false;
 		return true;
 	}
 
@@ -54,7 +49,7 @@ public class Point {
 				int nx = x+ox;
 				int ny = y+oy;
 				
-				points.add(new Point(nx, ny, z));
+				points.add(new Point(nx, ny));
 			}
 		}
 
