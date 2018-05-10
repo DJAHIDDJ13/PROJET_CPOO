@@ -1,5 +1,6 @@
 package rogue.screens;
 
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,13 +16,15 @@ public class PlayScreen implements Screen {
     private Creature player;
     private CreatureFactory creatureFactory;
     private List<String> messages;
-    public PlayScreen(){
+	private FieldOfView fov;
+	public PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
         creatureFactory = new CreatureFactory(world);
         messages = new ArrayList<String>();
         player = creatureFactory.newPlayer(messages);
+		fov = new FieldOfView(world);
         populateWorld();
     }
     public PlayScreen(String path) {
@@ -35,6 +38,7 @@ public class PlayScreen implements Screen {
 		}
         screenWidth = 80;
         screenHeight = 21;
+        fov = new FieldOfView(world);
         player = world.getCreature().get(0);
     }
     private void populateWorld(){
@@ -59,16 +63,19 @@ public class PlayScreen implements Screen {
         savedGame = new SavedGame(world);
     }
     private void displayTiles(AsciiPanel terminal, int left, int top) {
-        for (int x = 0; x < screenWidth; x++){
+		fov.update(player.x, player.y, player.visionRadius());
+    	for (int x = 0; x < screenWidth; x++){
             for (int y = 0; y < screenHeight; y++){
                 int wx = x + left;
                 int wy = y + top;
-                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy), world.bgColor(wx, wy));
-            }
+				if (player.canSee(wx, wy))
+					terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+				else
+					terminal.write(fov.tile(wx, wy).glyph(), x, y, Color.darkGray);           }
         }
         List<Creature> creatures = world.getCreature();
         for(Creature c : creatures) {
-        	if(c.x >= left && c.x < left+screenWidth && c.y >= top  && c.y < top+screenHeight) {
+        	if(c.x >= left && c.x < left+screenWidth && c.y >= top  && c.y < top+screenHeight && player.canSee(c.x,  c.y)) {
         		terminal.write(c.glyph(), c.x-left, c.y-top, c.color(), c.bgColor());
         	}
         }

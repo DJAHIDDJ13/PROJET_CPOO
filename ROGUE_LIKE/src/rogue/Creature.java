@@ -20,6 +20,9 @@ public class Creature {
 	private CreatureAi ai;
 	public void setCreatureAi(CreatureAi ai) { this.ai = ai; }
 	public CreatureAi getCreatureAi() {return this.ai; }
+	private int visionRadius;
+	public int visionRadius() { return visionRadius; }
+
 	public Creature(World world, char glyph, Color color,
 			        Color bgColor, int maxHp, int attack, int defense){
 		this.world = world;
@@ -30,6 +33,7 @@ public class Creature {
 		hp = maxHp;
 		AttackValue = attack;
 		DefenseValue = defense;
+		visionRadius = 9;
 	}
 	
 	public void moveBy(int mx, int my){
@@ -116,5 +120,12 @@ public class Creature {
 	    }
 	    
 	    return builder.toString().trim();
+	}
+	public boolean canSee(int wx, int wy){
+		return ai.canSee(wx, wy);
+	}
+
+	public Tile tile(int wx, int wy) {
+		return world.tile(wx, wy);
 	}
 }
