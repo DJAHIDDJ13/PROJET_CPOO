@@ -1,10 +1,10 @@
 package rogue;
 
 public class PlantAi extends CreatureAi {
-	CreatureFactory factory;
+	Factory factory;
 	public int nbrChildren;
 	public int childLevel;
-	public PlantAi(Creature creature, CreatureFactory factory, int childLevel) {
+	public PlantAi(Creature creature, Factory factory, int childLevel) {
 		super(creature);
 		this.factory = factory;
 		this.childLevel = childLevel;

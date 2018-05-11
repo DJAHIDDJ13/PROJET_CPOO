@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="LibraryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-05-10T11:24:46" hostname="senhaji-Lenovo-YOGA-300-11IBY" time="0.006">
+<testsuite name="LibraryTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-05-11T12:16:19" hostname="senhaji-Lenovo-YOGA-300-11IBY" time="0.008">
   <properties/>
-  <testcase name="testSomeLibraryMethod" classname="LibraryTest" time="0.006"/>
+  <testcase name="testSomeLibraryMethod" classname="LibraryTest" time="0.008"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

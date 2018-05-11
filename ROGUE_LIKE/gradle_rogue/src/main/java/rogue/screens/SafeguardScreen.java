@@ -2,8 +2,7 @@ package rogue.screens;
 
 import java.awt.Color;
 import java.awt.event.KeyEvent;
-import java.io.FileNotFoundException;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 
 import asciiPanel.AsciiPanel;
 import rogue.SavedGame;
@@ -45,9 +44,7 @@ public class SafeguardScreen implements Screen {
 			case KeyEvent.VK_ENTER:
 				try {
 					savedGame.SaveGame(fileName);
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				} catch(FileNotFoundException e) {
+				} catch(IOException e) {
 					badNameError = true;
 					fileName = "";
 					return this;
