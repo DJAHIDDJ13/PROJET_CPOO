@@ -136,4 +136,8 @@ public class World {
 		}
 		return false;
 	}
+
+	public void addAtWorld(Item item, int x, int y) {
+		items[x][y] = item;		
+	}
 }

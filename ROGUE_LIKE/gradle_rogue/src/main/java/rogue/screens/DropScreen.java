@@ -14,10 +14,6 @@ public class DropScreen extends InventoryBasedScreen {
 		return "drop"; 
 	}
 
-	@Override
-	protected boolean isAcceptable(Item item) { 
-		return true; 
-	}
 	
 	@Override
 	protected Screen use(Item item) { 

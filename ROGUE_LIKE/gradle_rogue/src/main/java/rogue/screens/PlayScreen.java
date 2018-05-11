@@ -48,10 +48,10 @@ public class PlayScreen implements Screen {
         for(int i=0; i<100; i++) {
         	factory.newPlant();
         }
-        for(int i=0; i<50; i++) {
+        for(int i=0; i<70; i++) {
         	factory.newMole();
         }
-        for(int i=0; i<200; i++) {
+        for(int i=0; i<100; i++) {
         	factory.newHint(goalX, goalY);
         }
     }
@@ -83,8 +83,8 @@ public class PlayScreen implements Screen {
         }
     }
 	private void createItems(Factory factory) {
-		for (int i = 0; i < world.width() * world.height() / 100; i++){
-			factory.newRock();
+		for (int i = 0; i <50; i++){
+			factory.newApple();
 		}
 	}
 	
