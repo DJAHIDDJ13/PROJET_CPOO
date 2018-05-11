@@ -5,7 +5,9 @@ rabie ala eddine chahi
 hadjer seddar
 
 compilation et exécution:
+
  -gradle build
+ 
  -gradle run
 
 Manuel Utilisation :
@@ -16,6 +18,7 @@ si elle deja sauvegardé (load) , et avec (help)pour Manuel pour joue et aide Ut
 et dans la partie load on peu surprime une partie deja sauvegardé.
 
 Une fois la partie lancée, plusieurs commandes sont disponibles:
+
  * Mouvement: "move down/left/right/up"
 
  * Attaquer : "attack down/left/right/up"
