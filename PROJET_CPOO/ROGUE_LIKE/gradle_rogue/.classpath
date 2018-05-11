@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
+	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
+	<classpathentry kind="lib" path="/home/senhaji/PROJET_CPOO/ROGUE_LIKE/gradle_rogue/libs/asciiPanel.jar"/>
+	<classpathentry kind="lib" path="/home/senhaji/PROJET_CPOO/ROGUE_LIKE/gradle_rogue/libs/jgrapht-core-0.9.2.jar"/>
+	<classpathentry kind="lib" path="/home/senhaji/eclipse-workspace/PROJET_CPOO/ROGUE_LIKE/gradle_rogue/gson-2.2.2.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
