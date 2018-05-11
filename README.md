@@ -32,4 +32,5 @@ Une fois la partie lancée, plusieurs commandes sont disponibles:
 
  * Enregistrer ou  pas le jeu 
 
+Pour les manuels techniques et la documentation concernant le projet veuillez vous référez au rapport conçu justement pour décrire toute l'impléméntation , les algorithmes utilisés , et les choix d'implémentations.
  
