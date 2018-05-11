@@ -26,7 +26,7 @@ public class Factory {
 		return player;
 	}
 	public Creature newPlant() {
-		Creature plant = new Creature(world, 'p', new Color(0, 255, 0), "plant", 20, 0, 0);
+		Creature plant = new Creature(world, 'p', new Color(0, 255, 255), "plant", 20, 0, 0);
 		world.addAtEmptyLocation(plant);
 		new PlantAi(plant, this, 0);
 		return plant;
@@ -44,14 +44,14 @@ public class Factory {
 		new HintAi(npc, goalX, goalY);
 		return npc;
 	}
-	public Item newRock(){
-		Item rock = new Item(',', AsciiPanel.yellow, "rock");
-		world.addAtEmptyLocation(rock);
-		return rock;
+	public Item newApple(){
+		Item apple = new Item(',', AsciiPanel.red, "apple");
+		world.addAtEmptyLocation(apple);
+		return apple;
 	}
 	
 	public int[] newVictoryItem(){
-		Item item = new Item('*', AsciiPanel.brightWhite, "teddy bear");
+		Item item = new Item('*', AsciiPanel.green, "teddy bear");
 		return world.addAtEmptyLocation(item);
 	}
 

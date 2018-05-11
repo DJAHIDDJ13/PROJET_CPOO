@@ -111,8 +111,8 @@ public class Creature {
 		if(glyph == 'h')
 			return;
 		Item corpse = new Item('%', color, name + " corpse");
-		int multiplier = (glyph=='m')?20:2;
-		corpse.modifyFoodValue(maxHp*multiplier);
+		double multiplier = (glyph=='m')?10:2;
+		corpse.modifyFoodValue((int)(maxHp*multiplier));
 		world.addAtEmptySpace(corpse, x, y);
 	}
 	public void takeDamage(int amount) {
@@ -124,7 +124,7 @@ public class Creature {
 		}
 	}
 	public void update() {
-		modifyFood(-1);
+		modifyFood(-10);
 		ai.onUpdate();
 	}
 
@@ -234,6 +234,9 @@ public class Creature {
 	}
 	
 	public void eat(Item item){
+		if(item.glyph() == ',') {
+			takeDamage(10);
+		}
 		if (item.foodValue() < 0)
 			notify("Gross!");
 		

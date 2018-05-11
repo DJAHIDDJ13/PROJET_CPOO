@@ -12,7 +12,6 @@ public abstract class InventoryBasedScreen implements Screen {
 	private String letters;
 	
 	protected abstract String getVerb();
-	protected abstract boolean isAcceptable(Item item);
 	protected abstract Screen use(Item item);
 	
 	public InventoryBasedScreen(Creature player){
@@ -46,7 +45,7 @@ public abstract class InventoryBasedScreen implements Screen {
 		for (int i = 0; i < inventory.length; i++){
 			Item item = inventory[i];
 			
-			if (item == null || !isAcceptable(item))
+			if (item == null)
 				continue;
 			
 			String line = letters.charAt(i) + " - " + item.glyph() + " " + item.name();
@@ -63,8 +62,7 @@ public abstract class InventoryBasedScreen implements Screen {
 		
 		if (letters.indexOf(c) > -1 
 				&& items.length > letters.indexOf(c)
-				&& items[letters.indexOf(c)] != null
-				&& isAcceptable(items[letters.indexOf(c)])) {
+				&& items[letters.indexOf(c)] != null) {
 			return use(items[letters.indexOf(c)]);
 		} else if (key.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			return null;

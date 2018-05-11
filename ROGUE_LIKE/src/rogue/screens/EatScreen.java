@@ -14,10 +14,6 @@ public class EatScreen extends InventoryBasedScreen {
 		return "eat";
 	}
 
-	@Override
-	protected boolean isAcceptable(Item item) {
-		return item.foodValue() != 0;
-	}
 
 	@Override
 	protected Screen use(Item item) {

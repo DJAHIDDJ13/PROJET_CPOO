@@ -131,24 +131,15 @@ public class SavedGame {
 		FileReader reader = new FileReader(path);
 		SavedGame s = load.fromJson(reader, SavedGame.class);
 		Tile[][] tiles = new Tile[s.world.length][s.world[0].length];	
-		List<int[]> items = new ArrayList<int[]>(); 
 		int goalX = 0, goalY = 0;
 		for(int i=0; i<s.world.length; i++) {
 			for(int j=0; j<s.world[0].length; j++) {
 				switch(s.world[i][j]) {
 				case '@': tiles[i][j] = Tile.WALL; break;
-				case '.': tiles[i][j] = Tile.FLOOR; break;
-				case ',':
-					tiles[i][j] = Tile.FLOOR;
-					int[] tmp = {i, j, ','};
-					items.add(tmp);
-					break;
 				case '*':
 					goalX = i;
 					goalY = j;
 					tiles[i][j] = Tile.FLOOR;
-					int[] tmp1 = {i, j, '*'};
-					items.add(tmp1);
 					break;
 				case ' ':
 					tiles[i][j] = Tile.UNKNOWN;
@@ -159,11 +150,19 @@ public class SavedGame {
 			}
 		}
 		World w = new World(tiles);
-		for(int[] n: items) {
-			if(n[2] == ',') {
-				w.addAtEmptySpace(new Item(',', AsciiPanel.yellow, "rock"), n[0], n[1]);
-			} else if(n[2] == '*'){
-				w.addAtEmptySpace(new Item('*', AsciiPanel.brightWhite, "teddy bear"), n[0], n[1]);
+		for(int i=0; i<s.world.length; i++) {
+			for(int j=0; j<s.world[0].length; j++) {
+				switch(s.world[i][j]) {
+					case ',':
+						w.addAtWorld(new Item(',', AsciiPanel.red, "apple"), i,j);
+						break;
+					case '*':
+						w.addAtWorld(new Item('*', AsciiPanel.green, "Teddy bear"), i,j);
+						break;
+					case '%':
+						w.addAtWorld(new Item('%', AsciiPanel.white, "corpse"), i,j);
+						break;
+				}
 			}
 		}
 		factory = new Factory(w);
@@ -177,20 +176,24 @@ public class SavedGame {
 		d.x = s.player[0];
 		d.y = s.player[1];
 		d.setInventory(new Inventory(s.items.length));
-		if(s.items != null);
-			for(int i=0; i<s.items.length; i++) {
-				switch(s.items[i]) {
-					case ',':
-						d.inventory().add(new Item(',', AsciiPanel.yellow, "rock"));
-						break;
-					case '*':
-						d.inventory().add(new Item('*', AsciiPanel.brightWhite, "teddy bear"));
-						break;
+		for(int i=0; i<s.items.length; i++) {
+			switch(s.items[i]) {
+				case ',':
+					d.inventory().add(new Item(',', AsciiPanel.red, "apple"));
+					break;
+				case '*':
+					d.inventory().add(new Item('*', AsciiPanel.green, "Teddy bear"));
+					break;
+				case '%':
+					Item m = new Item('%', AsciiPanel.white, "corpse");
+					m.modifyFoodValue(100);
+					d.inventory().add(m);
+					break;
 				}
 			}
 		c.add(d);
 		for(int i=0; i<s.plants.length; i++) {
-			Creature plant = new Creature(w, 'p', new Color(0, 255, 0),"plant", s.plants[i][3], 0, 0);
+			Creature plant = new Creature(w, 'p', new Color(0, 255, 255),"plant", s.plants[i][3], 0, 0);
 			plant.takeDamage(s.plants[i][2]-s.plants[i][3]);
 			new PlantAi(plant, factory, s.plants[i][4]);
 			plant.x = s.plants[i][0];
